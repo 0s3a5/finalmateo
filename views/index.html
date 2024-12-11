@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tienda en Línea</title>
+  <link rel="stylesheet" href="path/to/bootstrap.css">
+  <link rel="stylesheet" href="path/to/your-custom-styles.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">
+        <img src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/store-logo-design-template-3ac57f780d1cae2a6d3a049f82c62437_screen.jpg?ts=1646205211" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
+        Tienda en Línea
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto" id="navbar-items"></ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="carousel-container">
+  <div class="carousel-container">
+  <div class="carousel">
+    <img class="carousel-image" src="https://img.freepik.com/vector-gratis/banners-rebajas-moda-foto_52683-21232.jpg" alt="Imagen 1">
+    <img class="carousel-image" src="https://img.freepik.com/vector-gratis/banners-rebajas-ropa-foto_23-2148219780.jpg">
+    <img class="carousel-image" src="https://img.freepik.com/vector-gratis/plantilla-pagina-destino-venta-moda_23-2148581015.jpg">
+    <img class="carousel-image" src="https://img.freepik.com/vector-gratis/set-banners-compras-moda_23-2148182164.jpg?semt=ais_hybrid">
+  </div>
+  <button class="carousel-button prev">&#10094;</button>
+  <button class="carousel-button next">&#10095;</button>
+  <div class="carousel-indicators">
+    <span class="indicator active"></span>
+    <span class="indicator"></span>
+    <span class="indicator"></span>
+    <span class="indicator"></span>
+  </div>
+</div>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row" id="product-list">
+      <!-- Productos renderizados dinámicamente -->
+    </div>
+  </div>
+
+  <script>
+    // Renderiza dinámicamente el navbar según el estado del usuario
+    const navbarItems = document.getElementById('navbar-items');
+    const user = null; // Esto puede ser cargado desde una API en el futuro
+
+    if (user) {
+      navbarItems.innerHTML = `
+        <li class="nav-item"><span class="nav-link">Bienvenido, ${user.name}</span></li>
+        <li class="nav-item"><a class="nav-link" href="/logout">Salir</a></li>
+        <li class="nav-item"><a class="nav-link" href="/carrito">Carrito</a></li>
+      `;
+    } else {
+      navbarItems.innerHTML = `
+        <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+        <li class="nav-item"><a class="nav-link" href="/administracion">Administración</a></li>
+      `;
+    }
+
+    // Renderiza dinámicamente los productos
+    async function cargarProductos() {
+            const response = await fetch('/productos');
+            const productos = await response.json();
+            const lista = document.getElementById('productos-lista');
+            lista.innerHTML = '';
+            productos.forEach(producto => {
+                lista.innerHTML += `
+                    <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                        <div class="tarjeta-producto">
+                            <div class="tarjeta-contenido">
+                                <div class="frontal">
+                                    <img src="${producto.imagen}" alt="${producto.nombre}" class="img-fluid">
+                                    <div class="nombre">${producto.nombre}</div>
+                                </div>
+                                <div class="trasera">
+                                    <div class="descripcion">
+                                        Precio: $${producto.precio} USD<br>
+                                    </div>
+                                    <a class="btn" href="/login" style="margin-right: 5vw;">Comprar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        
+        cargarProductos();
+  </script>
+</body>
+</html>

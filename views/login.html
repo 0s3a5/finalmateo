@@ -1,0 +1,124 @@
+<style>
+    /* Estilos para el preloader */
+    #preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+  </style>
+  
+  <div class="contenedor__todo">
+    <div class="caja__trasera">
+      <div class="caja__trasera-login">
+        <h3>¿Ya tienes una cuenta?</h3>
+        <p>Inicia sesión para entrar en la página</p>
+        <button id="btn__iniciar-sesion" onclick="toggleForms()">Iniciar Sesión</button>
+      </div>
+      <div class="caja__trasera-register">
+        <h3>¿Aún no tienes una cuenta?</h3>
+        <p>Regístrate para entrar en la página</p>
+        <button id="btn__registrarse" onclick="toggleForms()">Registrarse</button>
+      </div>
+    </div>
+  
+    <!-- Formulario de Login y Registro -->
+    <div class="contenedor__login-register">
+      <!-- Login -->
+      <form id="loginForm" action="/login" method="POST" class="formulario__login">
+        <h2>Iniciar Sesión</h2>
+        <input type="text" name="email" id="loginEmail" placeholder="Correo electrónico" required>
+        <input type="password" name="password" id="loginPassword" placeholder="Contraseña" required>
+        <button type="submit">Entrar</button>
+        <p id="loginError" style="color: red; display: none;"></p> <!-- Mensaje de error -->
+      </form>
+  
+      <!-- Registro -->
+      <form id="registerForm" action="/signup" method="POST" class="formulario__register" style="display: none;">
+        <h2>Registrarse</h2>
+        <input type="text" name="name" id="registerName" placeholder="Nombre Completo" required>
+        <input type="text" name="email" id="registerEmail" placeholder="Correo electrónico" required>
+        <input type="text" name="username" id="registerUsername" placeholder="Usuario" required>
+        <input type="password" name="password" id="registerPassword" placeholder="Contraseña" required>
+        <button type="submit">Registrarse</button>
+        <p id="registerError" style="color: red; display: none;"></p> <!-- Mensaje de error -->
+      </form>
+    </div>
+  </div>
+  
+  <script>
+    function toggleForms() {
+      const loginForm = document.querySelector('.formulario__login');
+      const registerForm = document.querySelector('.formulario__register');
+  
+      if (loginForm.style.display === 'none') {
+        loginForm.style.display = 'block';
+        registerForm.style.display = 'none';
+      } else {
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'block';
+      }
+    }
+  
+    // Manejo de errores de login
+    document.getElementById('loginForm').addEventListener('submit', async function (event) {
+      event.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      
+      const response = await fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
+  
+      const data = await response.json();
+      const loginError = document.getElementById('loginError');
+  
+      if (response.ok) {
+        // Si la respuesta es exitosa, redirigir o hacer algo
+        window.location.href = "/index"; // Redirigir a una página protegida, por ejemplo
+      } else {
+        // Si hay un error, mostrar el mensaje
+        loginError.textContent = data.error || 'Correo o contraseña incorrectos';
+        loginError.style.display = 'block';
+      }
+    });
+  
+    // Manejo de errores de registro
+    document.getElementById('registerForm').addEventListener('submit', async function (event) {
+      event.preventDefault();
+      const name = document.getElementById('registerName').value;
+      const email = document.getElementById('registerEmail').value;
+      const username = document.getElementById('registerUsername').value;
+      const password = document.getElementById('registerPassword').value;
+      
+      const response = await fetch('/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, email, username, password })
+      });
+  
+      const data = await response.json();
+      const registerError = document.getElementById('registerError');
+  
+      if (response.ok) {
+        // Si la respuesta es exitosa, redirigir o hacer algo
+        window.location.href = "/index"; // Redirigir a una página protegida, por ejemplo
+      } else {
+        // Si hay un error, mostrar el mensaje
+        registerError.textContent = data.error || 'Este correo ya está registrado';
+        registerError.style.display = 'block';
+      }
+    });
+  </script>
